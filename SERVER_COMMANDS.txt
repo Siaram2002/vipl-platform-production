@@ -1,0 +1,65 @@
+VIPL PLATFORM SERVER COMMANDS
+
+1. Create server folder:
+sudo mkdir -p /opt/vipl-platform
+sudo chown -R $USER:$USER /opt/vipl-platform
+cd /opt/vipl-platform
+
+2. Clone GitHub repo:
+git clone https://github.com/Siaram2002/vipl-platform-production.git .
+
+3. First-time setup:
+chmod +x *.sh
+./first-time-setup.sh
+
+4. Edit environment:
+nano .env
+
+5. Deploy:
+./deploy.sh
+
+Updated deployment flow:
+- Pull Docker Hub images
+- Start mysql and redis first
+- Run ensure-databases.sh
+- Create missing schemas/databases safely using CREATE DATABASE IF NOT EXISTS
+- Start all services
+- Hibernate ddl-auto=update creates missing tables
+
+6. Check status:
+./status.sh
+
+7. Logs:
+./logs.sh
+./logs.sh api-gateway
+./logs.sh auth-service
+./logs.sh cms-service
+./logs.sh cms-transport-service
+./logs.sh notification-service
+./logs.sh eureka-server
+
+8. Ensure databases manually if needed:
+./ensure-databases.sh
+
+9. Backup DB:
+./backup-db.sh
+
+10. Stop without deleting DB/uploads:
+./stop.sh
+
+11. Pull latest images and restart:
+./pull-latest.sh
+
+12. Connect MySQL Workbench from laptop:
+ssh -L 3307:localhost:3306 USER@SERVER_IP
+
+Workbench:
+Host: 127.0.0.1
+Port: 3307
+User: root
+Password: MYSQL_ROOT_PASSWORD from server .env
+
+NEVER run in production unless you want data loss:
+docker compose down -v
+docker volume rm ...
+docker system prune --volumes
