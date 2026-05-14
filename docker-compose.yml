@@ -56,7 +56,7 @@ services:
       - vipl-net
 
   auth-service:
-    image: badulla2003/vipl-auth-service:1.0.0
+    image: badulla2003/vipl-auth-service:1.0.1
     container_name: auth-service
     restart: always
     env_file:
